@@ -1,1 +1,4 @@
 /data
+/.ropeproject
+**/*.pyc
+/__pycache__
