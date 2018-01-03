@@ -16,7 +16,7 @@ def orders():
         return get_orders()
 
 
-def get_orders(InvoiceStatus = 2, DateStart = '2017.01.01'):
+def get_uninvoiced_orders(InvoiceStatus = 2, DateStart = '2017.01.01', **kwargs):
     """
     WARNING: ONLY 500 ORDERS
     """
@@ -24,6 +24,15 @@ def get_orders(InvoiceStatus = 2, DateStart = '2017.01.01'):
     params = {'InvoiceStatus': InvoiceStatus,
               'DateStart': DateStart
               }
+    for arg in kwargs:
+        params[arg] = kwargs[arg]
+    return helpers.response_to_orders(service.getOrder(params))
+
+def get_orders(**kwargs):
+    params = {}
+    service = main._UnasService()
+    for arg in kwargs:
+        params[arg] = kwargs[arg]
     return helpers.response_to_orders(service.getOrder(params))
 
 
