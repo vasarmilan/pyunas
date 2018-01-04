@@ -3,7 +3,8 @@
 from __future__ import print_function
 import zeep
 import os
-from dicttoxml import dicttoxml
+# from dicttoxml import dicttoxml
+from xmltodict import unparse as dicttoxml
 import xmltodict
 
 
@@ -40,13 +41,13 @@ class _UnasService(object):
         if type(inp) == dict:
             try:
                 res =\
-                    dicttoxml(inp, custom_root=custom_root)
-            except TypeError:
-                res = \
-                    dicttoxml(inp, custom_root=custom_root).decode("utf-8")
-            print(res)
-            return res
-        raise TypeError
+                    dicttoxml({custom_root: inp})
+                return res
+            # except TypeError:
+            except:
+                # res = \
+                #     dicttoxml(inp, custom_root=custom_root).decode("utf-8")
+                print(inp)
     @classmethod
     def _auth(cls):
         """return auth xml as string"""

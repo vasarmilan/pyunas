@@ -5,6 +5,9 @@ import json
 from . import helpers
 from . import main
 
+def unprocessed_orders():
+    status = 1
+    return get_orders(Status=status)
 
 def orders():
     fname = helpers.datafolder + "/orders0.json"
