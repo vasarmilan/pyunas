@@ -7,6 +7,13 @@ datafolder = "/home/vasar/Dropbox/business/.unasdata"
 dateformat = "%Y.%m.%d %H:%M:%S"
 
 def response_to_orders(response):
+    # CLEANME ?????
+    # whatisthis?
+    """
+    params:
+    response -- dict object from xml, indicates
+    """
+    # getting first element from response
     first = response[next(iter(response.keys()))]
     return first[list(first.keys())[0]]
 

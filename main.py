@@ -3,7 +3,6 @@
 from __future__ import print_function
 import zeep
 import os
-# from dicttoxml import dicttoxml
 from xmltodict import unparse as dicttoxml
 import xmltodict
 
@@ -21,33 +20,37 @@ class _UnasService(object):
     wsdl = "https://api.unas.eu/shop/?wsdl"
     method_list = ["getAuth", "getCustomer", "getNewsletter", "getOrder", "getProduct", "getProductDB", "getStock", "setNewsletter", "setNewsletterXML", "setOrder", "setOrderXML", "setProduct", "setProductDB", "setProductXML", "setStock", "setStockXML"]
 
-
     def __init__(self):
         self._client = zeep.Client(self.wsdl)
         self._service = self._client.service
         for method in self.method_list:
             setattr(self, method, self._construct_api_func(method))
+
     def _construct_api_func(self, method):
-        return lambda params: xmltodict.parse(getattr(
-            self._service, method)(self._auth(), self._dictorxml(params)))
-    @classmethod
+        def func(params):
+            res = getattr(
+                    self._service, method)(self._auth(), self._dictorxml(params))
+            # return xmltodict.parse(res)
+            return res
+        return func
+
     def _dictorxml(cls, inp, custom_root='params'):
-        try: #for python3 compatibility
+        try:  # for python3 compatibility
             if type(inp) == str or type(inp) == unicode:
                 return inp
         except NameError:
             if type(inp) == str:
                 return inp
-        if type(inp) == dict:
-            try:
-                res =\
-                    dicttoxml({custom_root: inp})
-                return res
-            # except TypeError:
-            except:
-                # res = \
-                #     dicttoxml(inp, custom_root=custom_root).decode("utf-8")
-                print(inp)
+
+        # else
+        try:
+            res =\
+                dicttoxml({custom_root: inp})
+            return res
+        except TypeError:
+            res = \
+                dicttoxml(inp, custom_root=custom_root).decode("utf-8")
+
     @classmethod
     def _auth(cls):
         """return auth xml as string"""
@@ -58,6 +61,7 @@ class _UnasService(object):
         return authxml
 
 class _UnasApi(object):
+    # TODO why?
     @classmethod
     def file(cls):
         print(None)
