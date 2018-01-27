@@ -10,13 +10,12 @@ from . import main
 def unprocessed_orders_odoo_sync():
     orders = unprocessed_orders()
     keys = [ord['Key'] for ord in orders]
-    return _set_to_processing_list(keys)
     return orders
 
 
 def unprocessed_orders():
     status = 1
-    return xmltodict.parse(get_orders(Status=status))['Orders']['Order']
+    return get_orders(Status=status)['Orders']['Order']
 
 
 def _set_to_processing_list(nums, service=None):

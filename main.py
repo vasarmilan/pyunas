@@ -27,11 +27,11 @@ class _UnasService(object):
             setattr(self, method, self._construct_api_func(method))
 
     def _construct_api_func(self, method):
-        def func(params):
+        def func(params, auth=None):
+            auth = auth or self._auth()
             res = getattr(
                     self._service, method)(self._auth(), self._dictorxml(params))
-            # return xmltodict.parse(res)
-            return res
+            return xmltodict.parse(res)
         return func
 
     def _dictorxml(cls, inp, custom_root='params'):
@@ -60,8 +60,12 @@ class _UnasService(object):
             authxml = file.read()
         return authxml
 
-class _UnasApi(object):
-    # TODO why?
-    @classmethod
-    def file(cls):
-        print(None)
+
+class _UnasMeta(type):
+    def __getattr__(cls, key):
+        _service = _UnasService()
+        return getattr(_service, key)
+
+
+class api:
+    __metaclass__ = _UnasMeta
